@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="keywords" content="" />
+	<meta name="author" content="" />
+	<meta name="robots" content="" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="JhustEat" />
+	<meta property="og:title" content="JhustEat" />
+	<meta property="og:description" content="JhustEat" />
+	<meta property="og:image" content="social-image.png' %}" />
+	<meta name="format-detection" content="telephone=no">
+	
+	<!-- PAGE TITLE HERE -->
+		<title>JhustEat</title>
+	
+	<!-- FAVICONS ICON -->
+	<link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+	<link href="{% static 'vendor/swiper/css/swiper-bundle.min.css' %}" rel="stylesheet">
+	<link href="{% static 'vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
+
+	<link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+
+</head>
+
+<body class="body">
+
+	
+	{% if messages %}
+		
+		{% for message in messages %}
+			{% if message.tags == "success" %}
+				<script>
+					window.onload = function() {
+						swal("Success !!", "{{message}}", "success")
+					};
+				</script>
+			{% elif message.tags == "info" %}
+				<script>
+					window.onload = function() {
+						swal({ title: "Information !!", text: "{{message}}", type: "info", showCancelButton: !0, closeOnConfirm: !1, showLoaderOnConfirm: !0});
+					};
+				</script>
+			{% elif message.tags == "error" %}
+				<script>
+					window.onload = function() {
+						sweetAlert("Oops...", "{{message}}", "error")
+					};
+				</script>
+			{% endif %}
+		{% endfor %}
+			
+
+	{% endif %}
+
+
+    <div class="container mt-0">
+		<div class="row align-items-center justify-contain-center">
+			<div class="col-xl-12 mt-5">
+				<div class="card border-0">
+					<div class="card-body login-bx">
+						<div class="row  mt-5">
+							<div class="col-xl-8 col-md-6 sign text-center">
+								<div>
+									<video class="food-img" autoplay loop muted>
+										<source src="{% static 'videos/login_video.mp4' %}" type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+									{% comment %} <img src="{% static 'images/login-img/pic-5.jpg' %}" class="food-img" alt=""> {% endcomment %}
+								</div>	
+							</div>
+							<div class="col-xl-4 col-md-6 pe-0">
+								<div class="sign-in-your">
+									<div class="text-center mb-3">
+										<img src="{% static 'images/logo-full.png' %}" class="mb-3" alt="">
+										<h4 class="fs-20 font-w800 text-black">CONTINUE TO ACCOUNT</h4>
+										<span class="dlab-sign-up">Sign In</span>
+									</div>
+									<form method="post">
+										{% csrf_token %}
+										<div class="mb-3">
+											<label class="mb-1"><strong>Username</strong></label>
+											<input type="text" name="username" required class="form-control" placeholder="Obi1#">
+										</div>
+										<div class="mb-3">
+											<label class="mb-1"><strong>Password</strong></label>
+											<input type="password" name="password" required class="form-control" placeholder="Password">
+										</div>
+
+										{{captcha}}
+										<div class="row d-flex justify-content-between mt-4 mb-2">
+											<div class="mb-3">
+											   <div class="form-check custom-checkbox ms-1">
+													<input type="checkbox" class="form-check-input" id="basic_checkbox_1">
+													<label class="form-check-label" for="basic_checkbox_1">Remember my preference</label>
+												</div>
+											</div>
+											<div class="mb-3">
+												<a href="#">Forgot Password?</a>
+											</div>
+										</div>
+										<div class="text-center">
+											<button type="submit" id="submitBtn" class="btn btn-primary btn-block shadow" disabled>Sign Me In</button>
+										</div>
+									</form>
+									<div class="text-center">
+										<span>Don't Have An Account?<a href="{% url 'user_register' %}" class="text-primary"> Sign Up</a></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="{% static 'vendor/global/global.min.js' %}"></script>
+	<script src="{% static 'vendor/swiper/js/swiper-bundle.min.js' %}"></script>
+    <script src="{% static 'js/dlabnav-init.js' %}"></script>
+	<script src="{% static 'js/styleSwitcher.js' %}"></script>
+
+	<script src="{% static 'vendor/sweetalert2/dist/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'js/plugins-init/sweetalert.init.js' %}"></script>
+
+	<!-- Include the reCAPTCHA JavaScript library -->
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+	<script>
+		let captchaChecked = false;  // Track if the alert has been shown
+	
+		function checkCaptcha() {
+			// Check if reCAPTCHA response is present
+			if (grecaptcha.getResponse().length > 0 && !captchaChecked) {
+				captchaChecked = true;  // Prevent multiple alerts
+				document.getElementById('submitBtn').disabled = false;
+			} else if (grecaptcha.getResponse().length === 0) {
+				document.getElementById('submitBtn').disabled = true;
+				captchaChecked = false;  // Reset if CAPTCHA is unchecked
+			}
+		}
+	
+		// Poll every 500ms to check for CAPTCHA completion
+		setInterval(checkCaptcha, 500);
+	</script>	
+
+</body>
+</html>
